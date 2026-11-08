@@ -313,12 +313,114 @@
   }
 
   /* ------------------------------------------------------------------
+     Pointer-reactive core cube
+     ------------------------------------------------------------------ */
+  const cubeCardEl = document.querySelector(".core-card");
+  const cubeTilt = document.querySelector("[data-cube-tilt]");
+  const cubeStage = document.querySelector(".core-stage");
+  let resetCube = () => {};
+
+  if (cubeCardEl && cubeTilt && cubeStage && "PointerEvent" in window) {
+    let cubeFrame = 0;
+    let cubeBounds = null;
+    let cubeEngaged = false;
+    let aimX = 0;
+    let aimY = 0;
+    let tiltX = 0;
+    let tiltY = 0;
+
+    const renderCube = () => {
+      cubeFrame = 0;
+      tiltX += (aimX - tiltX) * 0.16;
+      tiltY += (aimY - tiltY) * 0.16;
+      const settled = Math.abs(aimX - tiltX) < 0.04 && Math.abs(aimY - tiltY) < 0.04;
+
+      if (settled) {
+        tiltX = aimX;
+        tiltY = aimY;
+      }
+
+      cubeTilt.style.transform = `rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+
+      if (!settled) {
+        cubeFrame = requestAnimationFrame(renderCube);
+      } else if (!cubeEngaged) {
+        cubeTilt.style.removeProperty("transform");
+        cubeCardEl.classList.remove("is-cube-live");
+      }
+    };
+
+    const kickCube = () => {
+      if (!cubeFrame) cubeFrame = requestAnimationFrame(renderCube);
+    };
+
+    cubeCardEl.addEventListener("pointerenter", () => {
+      if (!finePointer.matches || reduceMotion.matches) return;
+      cubeBounds = cubeCardEl.getBoundingClientRect();
+      cubeEngaged = true;
+      cubeCardEl.classList.add("is-cube-live");
+    });
+
+    cubeCardEl.addEventListener("pointermove", (event) => {
+      if (!finePointer.matches || reduceMotion.matches) return;
+      if (!cubeBounds) cubeBounds = cubeCardEl.getBoundingClientRect();
+      aimY = ((event.clientX - cubeBounds.left) / cubeBounds.width - 0.5) * 44;
+      aimX = ((event.clientY - cubeBounds.top) / cubeBounds.height - 0.5) * -28;
+      kickCube();
+    });
+
+    const releaseCube = () => {
+      if (!cubeEngaged) return;
+      cubeEngaged = false;
+      cubeBounds = null;
+      aimX = 0;
+      aimY = 0;
+      cubeCardEl.classList.remove("is-cube-live");
+      kickCube();
+    };
+
+    cubeCardEl.addEventListener("pointerleave", releaseCube);
+    cubeCardEl.addEventListener("pointercancel", releaseCube);
+
+    cubeStage.addEventListener("pointerdown", (event) => {
+      if (reduceMotion.matches || event.button !== 0) return;
+      cubeStage.classList.remove("is-shock");
+      void cubeStage.offsetWidth;
+      cubeStage.classList.add("is-shock");
+    });
+
+    cubeStage.addEventListener("animationend", (event) => {
+      if (event.animationName === "shock-ring") cubeStage.classList.remove("is-shock");
+    });
+
+    resetCube = () => {
+      if (cubeFrame) cancelAnimationFrame(cubeFrame);
+      cubeFrame = 0;
+      cubeEngaged = false;
+      cubeBounds = null;
+      aimX = aimY = tiltX = tiltY = 0;
+      cubeTilt.style.removeProperty("transform");
+      cubeCardEl.classList.remove("is-cube-live");
+      cubeStage.classList.remove("is-shock");
+    };
+
+    window.addEventListener(
+      "resize",
+      () => {
+        cubeBounds = null;
+      },
+      { passive: true }
+    );
+  }
+
+  /* ------------------------------------------------------------------
      Motion preference changes
      ------------------------------------------------------------------ */
   const syncCursor = () => setCursorEnabled(finePointer.matches && !reduceMotion.matches);
 
   const onMotionChange = () => {
     syncCursor();
+    resetCube();
     if (!reduceMotion.matches) return;
     tiltTargets.forEach((target) => {
       target.classList.remove("is-tilting");
