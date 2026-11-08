@@ -11,11 +11,88 @@
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.045"/>
     </pattern>
+    <style>
+      @keyframes kg-flow {
+        to { stroke-dashoffset: -24; }
+      }
+
+      @keyframes kg-node {
+        0%, 100% { opacity: 0.55; transform: scale(0.86); }
+        50% { opacity: 1; transform: scale(1.2); }
+      }
+
+      @keyframes kg-ring {
+        0%, 100% { stroke-opacity: 0.4; transform: scale(0.97); }
+        50% { stroke-opacity: 0.75; transform: scale(1.04); }
+      }
+
+      @keyframes kg-sonar {
+        0% { transform: scale(1); opacity: 0.7; }
+        70%, 100% { transform: scale(2.8); opacity: 0; }
+      }
+
+      .kg-flow {
+        stroke-dasharray: 3 9;
+        animation: kg-flow 1.8s linear infinite;
+      }
+
+      .kg-nodes circle {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: kg-node 4.4s ease-in-out infinite;
+      }
+
+      .kg-nodes circle:nth-child(2n) {
+        animation-delay: -1.4s;
+        animation-duration: 5.2s;
+      }
+
+      .kg-nodes circle:nth-child(3n) {
+        animation-delay: -2.5s;
+        animation-duration: 3.8s;
+      }
+
+      .kg-rings circle {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: kg-ring 6s ease-in-out infinite;
+      }
+
+      .kg-rings circle:nth-child(2n) {
+        animation-delay: -2.2s;
+        animation-duration: 7s;
+      }
+
+      .kg-sonar {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: kg-sonar 3.6s ease-out infinite;
+      }
+
+      .kg-sonar--late {
+        animation-delay: -1.8s;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .kg-flow, .kg-nodes circle, .kg-rings circle, .kg-sonar {
+          animation: none;
+        }
+
+        .kg-sonar {
+          opacity: 0;
+        }
+      }
+    </style>
   </defs>
 
   <rect width="800" height="520" fill="url(#bg)"/>
   <rect width="800" height="520" fill="url(#grid)"/>
   <circle cx="430" cy="270" r="240" fill="url(#glow)"/>
+
+  <g fill="none" stroke="#38e8ff">
+    <circle class="kg-sonar" cx="450" cy="300" r="16" stroke-opacity="0.55" stroke-width="1.4"/>
+    <circle class="kg-sonar kg-sonar--late" cx="450" cy="300" r="16" stroke-opacity="0.4" stroke-width="1.2"/>
+  </g>
 
   <g stroke="#ff2e9a" stroke-opacity="0.28" stroke-width="1.2">
     <path d="M210 340 L330 220 L450 300 L560 170 L660 250"/>
@@ -28,7 +105,18 @@
     <path d="M560 170 L520 400"/>
   </g>
 
-  <g fill="#0a0e14" stroke="#ff2e9a" stroke-width="1.5">
+  <g class="kg-flow" stroke="#38e8ff" stroke-opacity="0.42" stroke-width="1.25" stroke-linecap="round">
+    <path d="M210 340 L330 220 L450 300 L560 170 L660 250"/>
+    <path d="M330 220 L400 110 L560 170"/>
+    <path d="M450 300 L520 400 L650 360 L660 250"/>
+    <path d="M210 340 L300 430 L520 400"/>
+    <path d="M300 430 L400 300 L330 220"/>
+    <path d="M400 300 L450 300"/>
+    <path d="M400 110 L450 300"/>
+    <path d="M560 170 L520 400"/>
+  </g>
+
+  <g class="kg-rings" fill="#0a0e14" stroke="#ff2e9a" stroke-width="1.5">
     <circle cx="210" cy="340" r="9"/>
     <circle cx="330" cy="220" r="9"/>
     <circle cx="450" cy="300" r="9"/>
@@ -41,7 +129,7 @@
     <circle cx="400" cy="300" r="9"/>
   </g>
 
-  <g fill="#ff2e9a">
+  <g class="kg-nodes" fill="#ff2e9a">
     <circle cx="210" cy="340" r="3.2"/>
     <circle cx="330" cy="220" r="3.2"/>
     <circle cx="560" cy="170" r="3.2"/>

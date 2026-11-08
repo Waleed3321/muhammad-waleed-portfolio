@@ -11,16 +11,79 @@
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.045"/>
     </pattern>
+    <style>
+      @keyframes bi-bar {
+        0%, 100% { transform: scaleY(0.94); }
+        50% { transform: scaleY(1); }
+      }
+
+      @keyframes bi-arc {
+        to { stroke-dashoffset: -402; }
+      }
+
+      @keyframes bi-trace {
+        to { stroke-dashoffset: -200; }
+      }
+
+        12%, 76% { opacity: 1; }
+        100% { transform: translateY(206px); opacity: 0; }
+      }
+
+      @keyframes bi-kpi {
+        0%, 100% { stroke-opacity: 0.08; }
+        50% { stroke-opacity: 0.2; }
+      }
+
+      .bi-bars rect {
+        transform-box: fill-box;
+        transform-origin: bottom;
+        animation: bi-bar 5.2s ease-in-out infinite;
+      }
+
+      .bi-bars rect:nth-child(2n) { animation-delay: -1.3s; animation-duration: 6.1s; }
+      .bi-bars rect:nth-child(3n) { animation-delay: -2.4s; animation-duration: 4.4s; }
+
+      .bi-arc {
+        animation: bi-arc 16s linear infinite;
+      }
+
+      .bi-trace {
+        stroke-dasharray: 14 86;
+        animation: bi-trace 5.4s linear infinite;
+      }
+
+
+      .bi-kpi {
+        animation: bi-kpi 4.8s ease-in-out infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bi-bars rect, .bi-arc, .bi-trace, .bi-kpi {
+          animation: none;
+        }
+
+        .bi-trace {
+          opacity: 0;
+        }
+      }
+    </style>
   </defs>
 
   <rect width="800" height="520" fill="url(#bg)"/>
   <rect width="800" height="520" fill="url(#grid)"/>
 
   <g>
-    <rect x="80" y="90" width="150" height="78" rx="10" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.1"/>
-    <rect x="250" y="90" width="150" height="78" rx="10" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.1"/>
-    <rect x="420" y="90" width="150" height="78" rx="10" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.1"/>
-    <rect x="590" y="90" width="130" height="78" rx="10" fill="#3d8bff" fill-opacity="0.07" stroke="#3d8bff" stroke-opacity="0.28"/>
+    <rect x="80" y="90" width="150" height="78" rx="10" class="bi-kpi" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.1"/>
+    <rect x="250" y="90" width="150" height="78" rx="10" class="bi-kpi" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.1"/>
+    <rect x="420" y="90" width="150" height="78" rx="10" class="bi-kpi" fill="#ffffff" fill-opacity="0.025" stroke="#ffffff" stroke-opacity="0.1"/>
+    <rect x="590" y="90" width="130" height="78" rx="10" class="bi-kpi" fill="#3d8bff" fill-opacity="0.07" stroke="#3d8bff" stroke-opacity="0.4"/>
+  </g>
+
+  <g fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.85">
+    <path class="bi-trace" pathLength="100" stroke="#7cc4ff" d="M98 152 L118 146 L138 149 L158 138 L178 142 L198 130"/>
+    <path class="bi-trace" pathLength="100" stroke="#ff7cc0" d="M268 150 L288 140 L308 145 L328 132 L348 137 L368 126"/>
+    <path class="bi-trace" pathLength="100" stroke="#e6ebf2" d="M438 148 L458 152 L478 142 L498 146 L518 136 L538 140"/>
+    <path class="bi-trace" pathLength="100" stroke="#7cc4ff" d="M608 150 L626 150 L638 136 L664 136"/>
   </g>
 
   <g font-family="ui-monospace, Consolas, monospace">
@@ -35,7 +98,7 @@
     <path d="M656 136H664V144" stroke="#3d8bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 
-  <g>
+  <g class="bi-bars">
     <rect x="80" y="222" width="46" height="180" rx="5" fill="url(#bar)"/>
     <rect x="146" y="270" width="46" height="132" rx="5" fill="url(#bar)" opacity="0.8"/>
     <rect x="212" y="246" width="46" height="156" rx="5" fill="url(#bar)" opacity="0.9"/>
@@ -53,7 +116,7 @@
 
   <g>
     <circle cx="620" cy="300" r="64" stroke="#ffffff" stroke-opacity="0.08" stroke-width="14"/>
-    <circle cx="620" cy="300" r="64" stroke="#ff2e9a" stroke-opacity="0.7" stroke-width="14" stroke-dasharray="240 402" stroke-linecap="round" transform="rotate(-90 620 300)"/>
+    <circle class="bi-arc" cx="620" cy="300" r="64" stroke="#ff2e9a" stroke-opacity="0.7" stroke-width="14" stroke-dasharray="240 402" stroke-linecap="round" transform="rotate(-90 620 300)"/>
     <text x="620" y="306" fill="#f4f6f8" font-family="ui-monospace, Consolas, monospace" font-size="16" text-anchor="middle" letter-spacing="2">KPI</text>
   </g>
 

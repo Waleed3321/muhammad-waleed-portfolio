@@ -11,6 +11,73 @@
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.045"/>
     </pattern>
+    <clipPath id="hk-matrix">
+      <rect x="220" y="232" width="360" height="360"/>
+    </clipPath>
+    <linearGradient id="hk-band" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38e8ff" stop-opacity="0"/>
+      <stop offset="0.55" stop-color="#38e8ff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#38e8ff" stop-opacity="0"/>
+    </linearGradient>
+    <style>
+      @keyframes hk-scan {
+        0% { transform: translateY(0); opacity: 0; }
+        8%, 84% { opacity: 1; }
+        100% { transform: translateY(290px); opacity: 0; }
+      }
+
+      @keyframes hk-key {
+        0%, 100% { opacity: 0.12; }
+        45% { opacity: 0.55; }
+      }
+
+      @keyframes hk-rule {
+        0% { stroke-dashoffset: 1; }
+        7% { stroke-dashoffset: 0; }
+        93% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: 1; }
+      }
+
+      .hk-scan {
+        animation: hk-scan 7.4s cubic-bezier(0.45, 0, 0.3, 1) infinite;
+      }
+
+      .hk-key {
+        fill: #38e8ff;
+        animation: hk-key 5.4s ease-in-out infinite;
+      }
+
+      .hk-key:nth-child(2) { animation-delay: -0.675s; }
+      .hk-key:nth-child(3) { animation-delay: -1.35s; }
+      .hk-key:nth-child(4) { animation-delay: -2.025s; }
+      .hk-key:nth-child(5) { animation-delay: -2.7s; }
+      .hk-key:nth-child(6) { animation-delay: -3.375s; }
+      .hk-key:nth-child(7) { animation-delay: -4.05s; }
+      .hk-key:nth-child(8) { animation-delay: -4.725s; }
+
+      .hk-rule {
+        stroke-dasharray: 1;
+        animation: hk-rule 9s linear infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hk-scan, .hk-key, .hk-rule {
+          animation: none;
+        }
+
+        .hk-scan {
+          opacity: 0;
+        }
+
+        .hk-key {
+          opacity: 0;
+        }
+
+        .hk-rule {
+          stroke-dashoffset: 0;
+        }
+      }
+    </style>
   </defs>
 
   <rect width="800" height="760" fill="url(#bg)"/>
@@ -19,7 +86,7 @@
 
   <!-- Hindko wordmark -->
   <text x="400" y="138" text-anchor="middle" font-family="Segoe UI, Arial, Noto Naskh Arabic, sans-serif" font-size="74" font-weight="600" fill="#f4f6f8">ہندکو</text>
-  <path d="M330 158h140" stroke="#3d8bff" stroke-opacity="0.55" stroke-width="2"/>
+  <path class="hk-rule" d="M330 158h140" pathLength="1" stroke="#3d8bff" stroke-opacity="0.55" stroke-width="2"/>
   <text x="400" y="186" text-anchor="middle" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="3" fill="#788392">LOW-RESOURCE · HAZARA</text>
 
   <!-- attention matrix -->
@@ -99,6 +166,24 @@
       <rect x="487" y="499" width="36" height="30" rx="4" fill="#ff2e9a" fill-opacity="0.18"/>
       <rect x="529" y="499" width="36" height="30" rx="4" fill="#3d8bff" fill-opacity="0.6"/>
     </g>
+  </g>
+
+  <g clip-path="url(#hk-matrix)">
+    <g class="hk-scan">
+      <rect x="220" y="232" width="360" height="64" fill="url(#hk-band)"/>
+      <rect x="220" y="296" width="360" height="1.4" fill="#38e8ff" fill-opacity="0.4"/>
+    </g>
+  </g>
+
+  <g>
+    <rect class="hk-key" x="235" y="247" width="36" height="30" rx="4"/>
+    <rect class="hk-key" x="277" y="283" width="36" height="30" rx="4"/>
+    <rect class="hk-key" x="319" y="319" width="36" height="30" rx="4"/>
+    <rect class="hk-key" x="361" y="355" width="36" height="30" rx="4"/>
+    <rect class="hk-key" x="403" y="391" width="36" height="30" rx="4"/>
+    <rect class="hk-key" x="445" y="427" width="36" height="30" rx="4"/>
+    <rect class="hk-key" x="487" y="463" width="36" height="30" rx="4"/>
+    <rect class="hk-key" x="529" y="499" width="36" height="30" rx="4"/>
   </g>
 
   <g font-family="ui-monospace, Consolas, monospace" font-size="9.5" letter-spacing="1" fill="#788392">

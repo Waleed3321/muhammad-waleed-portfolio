@@ -11,6 +11,79 @@
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.045"/>
     </pattern>
+    <linearGradient id="au-sweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38e8ff" stop-opacity="0"/>
+      <stop offset="0.45" stop-color="#38e8ff" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#38e8ff" stop-opacity="0"/>
+    </linearGradient>
+    <style>
+      @keyframes au-dash {
+        to { stroke-dashoffset: -16; }
+      }
+
+      @keyframes au-shimmer {
+        0% { transform: translateX(-90px); opacity: 0; }
+        18% { opacity: 1; }
+        72% { transform: translateX(314px); opacity: 0; }
+        100% { transform: translateX(314px); opacity: 0; }
+      }
+
+      @keyframes au-draw {
+        0% { stroke-dashoffset: 1; }
+        8% { stroke-dashoffset: 0; }
+        90% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: 1; }
+      }
+
+      @keyframes au-pending {
+        0%, 100% { stroke-opacity: 0.18; }
+        50% { stroke-opacity: 0.62; }
+      }
+
+      @keyframes au-pick {
+        0%, 31% { transform: translateY(0); }
+        33%, 64% { transform: translateY(28px); }
+        66%, 97% { transform: translateY(56px); }
+        100% { transform: translateY(0); }
+      }
+
+      .au-flow {
+        animation: au-dash 1.6s linear infinite;
+      }
+
+      .au-shimmer {
+        animation: au-shimmer 4.4s ease-in-out infinite;
+      }
+
+      .au-shimmer--b { animation-delay: -1.5s; }
+      .au-shimmer--c { animation-delay: -2.9s; }
+
+      .au-item path {
+        stroke-dasharray: 1;
+        animation: au-draw 5.6s linear infinite;
+      }
+
+      .au-item:nth-child(2) path { animation-delay: 0.4s; }
+      .au-item:nth-child(3) path { animation-delay: 0.8s; }
+
+      .au-item--pending rect {
+        animation: au-pending 3.2s ease-in-out infinite;
+      }
+
+      .au-pick {
+        animation: au-pick 7.2s ease-in-out infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .au-flow, .au-shimmer, .au-item path, .au-item--pending rect, .au-pick {
+          animation: none;
+        }
+
+        .au-shimmer, .au-pick {
+          opacity: 0;
+        }
+      }
+    </style>
   </defs>
 
   <rect width="800" height="520" fill="url(#bg)"/>
@@ -35,24 +108,24 @@
   </g>
 
   <!-- checkbox column -->
-  <g>
-    <g stroke="#3d8bff" stroke-width="1.5" fill="#3d8bff" fill-opacity="0.16">
-      <rect x="114" y="160" width="16" height="16" rx="4"/>
-      <rect x="114" y="214" width="16" height="16" rx="4"/>
-      <rect x="114" y="268" width="16" height="16" rx="4"/>
+  <g font-family="ui-monospace, Consolas, monospace" font-size="11" letter-spacing="1.4">
+    <g class="au-item">
+      <rect x="114" y="160" width="16" height="16" rx="4" stroke="#3d8bff" stroke-width="1.5" fill="#3d8bff" fill-opacity="0.16"/>
+      <path d="m117 168 3 3 6-6" pathLength="1" stroke="#3d8bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="142" y="172" fill="#a7b0bd">01</text>
     </g>
-    <rect x="114" y="322" width="16" height="16" rx="4" stroke="#ffffff" stroke-opacity="0.3" fill="none"/>
-
-    <g stroke="#3d8bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="m117 168 3 3 6-6"/>
-      <path d="m117 222 3 3 6-6"/>
-      <path d="m117 276 3 3 6-6"/>
+    <g class="au-item">
+      <rect x="114" y="214" width="16" height="16" rx="4" stroke="#3d8bff" stroke-width="1.5" fill="#3d8bff" fill-opacity="0.16"/>
+      <path d="m117 222 3 3 6-6" pathLength="1" stroke="#3d8bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="142" y="226" fill="#a7b0bd">02</text>
     </g>
-
-    <g font-family="ui-monospace, Consolas, monospace" font-size="11" letter-spacing="1.4" fill="#a7b0bd">
-      <text x="142" y="172">01</text>
-      <text x="142" y="226">02</text>
-      <text x="142" y="280">03</text>
+    <g class="au-item">
+      <rect x="114" y="268" width="16" height="16" rx="4" stroke="#3d8bff" stroke-width="1.5" fill="#3d8bff" fill-opacity="0.16"/>
+      <path d="m117 276 3 3 6-6" pathLength="1" stroke="#3d8bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="142" y="280" fill="#a7b0bd">03</text>
+    </g>
+    <g class="au-item au-item--pending">
+      <rect x="114" y="322" width="16" height="16" rx="4" stroke="#ffffff" stroke-opacity="0.3" fill="none"/>
       <text x="142" y="334" fill="#788392">04</text>
     </g>
   </g>
@@ -81,11 +154,16 @@
       <rect x="512" y="224" width="74" height="7" rx="3.5"/>
       <rect x="512" y="278" width="74" height="7" rx="3.5"/>
     </g>
+
+    <rect class="au-shimmer" x="212" y="156" width="90" height="34" fill="url(#au-sweep)" opacity="0"/>
+    <rect class="au-shimmer au-shimmer--b" x="212" y="210" width="90" height="34" fill="url(#au-sweep)" opacity="0"/>
+    <rect class="au-shimmer au-shimmer--c" x="212" y="264" width="90" height="34" fill="url(#au-sweep)" opacity="0"/>
   </g>
 
   <!-- slicer panel -->
   <g>
     <rect x="646" y="304" width="118" height="142" rx="10" fill="#0a0e14" stroke="#3d8bff" stroke-opacity="0.3"/>
+    <rect class="au-pick" x="652" y="346" width="106" height="24" rx="5" fill="#3d8bff" fill-opacity="0.1" stroke="#3d8bff" stroke-opacity="0.25"/>
     <text x="662" y="330" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="1.6" fill="#3d8bff">REGION</text>
     <g font-family="ui-monospace, Consolas, monospace" font-size="10" fill="#a7b0bd">
       <text x="662" y="356">North</text>
@@ -98,7 +176,7 @@
   </g>
 
   <!-- connector lines to slicer -->
-  <g stroke="#3d8bff" stroke-opacity="0.32" stroke-width="1.3" stroke-dasharray="3 5">
+  <g class="au-flow" stroke="#3d8bff" stroke-opacity="0.32" stroke-width="1.3" stroke-dasharray="3 5">
     <path d="M616 173H646V372"/>
     <path d="M616 227H660V372"/>
     <path d="M616 281H674V372"/>
