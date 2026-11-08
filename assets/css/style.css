@@ -876,7 +876,6 @@ body.menu-open {
   );
   -webkit-mask-image: radial-gradient(circle, #000 0 38%, transparent 70%);
   mask-image: radial-gradient(circle, #000 0 38%, transparent 70%);
-  animation: aura-spin 20s linear infinite;
   pointer-events: none;
 }
 
@@ -925,7 +924,7 @@ body.menu-open {
 .core-ring--h1 {
   border: 1px solid rgba(56, 232, 255, 0.32);
   box-shadow: 0 0 26px rgba(56, 232, 255, 0.08) inset;
-  animation: ring-flat 24s linear infinite;
+  transform: rotateX(74deg) rotateZ(24deg);
 }
 
 .core-ring--h1::after {
@@ -936,7 +935,7 @@ body.menu-open {
 .core-ring--h2 {
   width: clamp(180px, 52%, 238px);
   border: 1px dashed rgba(56, 232, 255, 0.4);
-  animation: ring-flat-reverse 15s linear infinite;
+  transform: rotateX(74deg) rotateZ(-42deg);
 }
 
 .core-ring--h2::after {
@@ -947,7 +946,7 @@ body.menu-open {
 .core-ring--v {
   width: clamp(210px, 60%, 276px);
   border: 1px dotted rgba(255, 46, 154, 0.4);
-  animation: ring-upright 30s linear infinite;
+  transform: rotateY(70deg) rotateX(8deg) rotateZ(36deg);
 }
 
 .core-ring--v::after {
@@ -955,21 +954,15 @@ body.menu-open {
   box-shadow: 0 0 14px rgba(255, 46, 154, 0.9);
 }
 
-.core-cube-tilt {
-  position: relative;
-  display: grid;
-  place-items: center;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
 .core-cube {
   --cube: 132px;
   position: relative;
   width: var(--cube);
   height: var(--cube);
+  transform: rotateX(-16deg) rotateY(-34deg);
   transform-style: preserve-3d;
-  animation: core-spin 26s linear infinite;
+  touch-action: none;
+  will-change: transform;
 }
 
 .core-card.is-cube-live .core-face {
@@ -988,34 +981,12 @@ body.menu-open {
   box-shadow: inset 0 0 44px rgba(61, 139, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-.core-shock {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 5;
-  width: 240px;
-  height: 240px;
-  margin: -120px 0 0 -120px;
-  border: 1px solid rgba(56, 232, 255, 0.7);
-  border-radius: 50%;
-  box-shadow: 0 0 30px rgba(56, 232, 255, 0.4), inset 0 0 30px rgba(56, 232, 255, 0.22);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.core-stage.is-shock .core-shock {
-  animation: shock-ring 0.7s var(--ease);
-}
-
-@keyframes shock-ring {
-  from {
-    opacity: 0.85;
-    transform: scale(0.55);
-  }
-  to {
-    opacity: 0;
-    transform: scale(2);
-  }
+.core-card.is-dragging {
+  border-color: rgba(56, 232, 255, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 44px 100px rgba(0, 0, 0, 0.55),
+    0 0 92px rgba(56, 232, 255, 0.17);
 }
 
 .core-face {
@@ -1101,7 +1072,6 @@ body.menu-open {
   height: 5px;
   border-radius: 50%;
   pointer-events: none;
-  animation: spark-float 8s ease-in-out infinite;
 }
 
 .core-spark--a {
@@ -1116,18 +1086,6 @@ body.menu-open {
   bottom: 30%;
   background: var(--accent);
   box-shadow: 0 0 14px rgba(61, 139, 255, 0.85);
-  animation-delay: -3.5s;
-}
-
-.core-scan {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 3;
-  height: 36%;
-  border-bottom: 1px solid rgba(56, 232, 255, 0.24);
-  background: linear-gradient(180deg, transparent 10%, rgba(56, 232, 255, 0.075), rgba(56, 232, 255, 0.015));
-  animation: scan-pass 7.5s linear infinite;
-  pointer-events: none;
 }
 
 .core-hud {
@@ -1181,72 +1139,6 @@ body.menu-open {
   font-weight: 500;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-}
-
-@keyframes core-spin {
-  from {
-    transform: rotateX(-10deg) rotateY(0deg);
-  }
-  to {
-    transform: rotateX(-10deg) rotateY(360deg);
-  }
-}
-
-@keyframes ring-flat {
-  from {
-    transform: rotateX(74deg) rotateZ(0deg);
-  }
-  to {
-    transform: rotateX(74deg) rotateZ(360deg);
-  }
-}
-
-@keyframes ring-flat-reverse {
-  from {
-    transform: rotateX(74deg) rotateZ(360deg);
-  }
-  to {
-    transform: rotateX(74deg) rotateZ(0deg);
-  }
-}
-
-@keyframes ring-upright {
-  from {
-    transform: rotateY(70deg) rotateX(8deg) rotateZ(0deg);
-  }
-  to {
-    transform: rotateY(70deg) rotateX(8deg) rotateZ(360deg);
-  }
-}
-
-@keyframes aura-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes scan-pass {
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(360%);
-  }
-}
-
-@keyframes spark-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0.45;
-  }
-  50% {
-    transform: translate3d(10px, -14px, 0);
-    opacity: 1;
-  }
 }
 
 /* ---------- Stats ---------- */
@@ -2848,39 +2740,5 @@ html.js .reveal.is-visible {
   .core-card {
     transform: none;
     transition: none;
-  }
-
-  .core-cube-tilt {
-    transform: none !important;
-  }
-
-  .core-cube {
-    animation: none;
-    transform: rotateX(-16deg) rotateY(-34deg);
-  }
-
-  .core-ring--h1 {
-    animation: none;
-    transform: rotateX(74deg) rotateZ(24deg);
-  }
-
-  .core-ring--h2 {
-    animation: none;
-    transform: rotateX(74deg) rotateZ(-42deg);
-  }
-
-  .core-ring--v {
-    animation: none;
-    transform: rotateY(70deg) rotateX(8deg) rotateZ(36deg);
-  }
-
-  .core-stage__aura,
-  .core-scan,
-  .core-spark {
-    animation: none;
-  }
-
-  .core-scan {
-    opacity: 0.3;
   }
 }
