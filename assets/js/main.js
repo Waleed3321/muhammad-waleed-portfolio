@@ -137,8 +137,8 @@
     }
 
     const decimals = Number(el.dataset.countDecimals || 0);
-    const duration = 1100;
-    const start = performance.now();
+    const duration = 1400;
+    let start = 0;
 
     const tick = (now) => {
       const progress = Math.min((now - start) / duration, 1);
@@ -147,8 +147,15 @@
       if (progress < 1) requestAnimationFrame(tick);
     };
 
-    node.textContent = (0).toFixed(decimals);
-    requestAnimationFrame(tick);
+    window.setTimeout(() => {
+      if (reduceMotion.matches) {
+        settleCounter(el);
+        return;
+      }
+      node.textContent = (0).toFixed(decimals);
+      start = performance.now();
+      requestAnimationFrame(tick);
+    }, 260);
   };
 
   if (counters.length) {
