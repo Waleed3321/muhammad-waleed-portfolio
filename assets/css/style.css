@@ -2380,9 +2380,15 @@ body.menu-open {
 }
 
 .contact-panel {
+  --contact-pad: clamp(32px, 5vw, 64px);
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr);
+  grid-template-rows: repeat(5, auto);
+  align-items: start;
+  column-gap: clamp(20px, 3vw, 44px);
   overflow: hidden;
-  padding: clamp(32px, 5vw, 64px);
+  padding: var(--contact-pad);
   border: 1px solid var(--line-strong);
   border-radius: 10px;
   background:
@@ -2390,6 +2396,31 @@ body.menu-open {
     radial-gradient(ellipse 50% 60% at 10% 100%, rgba(255, 46, 154, 0.05), transparent 66%),
     var(--metal);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 8px 8px 0 rgba(0, 0, 0, 0.4);
+}
+
+.contact-panel > .section-label {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.contact-panel h2 {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.contact-copy {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.contact-actions {
+  grid-column: 1;
+  grid-row: 4;
+}
+
+.contact-meta {
+  grid-column: 1;
+  grid-row: 5;
 }
 
 .contact-panel::before {
@@ -2416,6 +2447,51 @@ body.menu-open {
     radial-gradient(circle at 60% 58%, rgba(56, 232, 255, 0.12), transparent 58%),
     radial-gradient(circle at 50% 50%, rgba(255, 46, 154, 0.08), transparent 64%);
   pointer-events: none;
+}
+
+.contact-portrait {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  position: relative;
+  align-self: stretch;
+  margin: calc(var(--contact-pad) * -1) calc(var(--contact-pad) * -1) calc(var(--contact-pad) * -1) 0;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.contact-portrait::before {
+  content: "";
+  position: absolute;
+  inset: 7% 2% 9%;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 56% 44% at 58% 33%, rgba(56, 232, 255, 0.18), transparent 72%),
+    radial-gradient(ellipse 50% 42% at 34% 60%, rgba(255, 46, 154, 0.15), transparent 74%);
+  filter: blur(38px);
+}
+
+.contact-portrait picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.contact-portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 100%;
+  filter: saturate(1.05) contrast(1.03) brightness(1.02);
+  -webkit-mask-image:
+    linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.35) 6%, #000 20%),
+    linear-gradient(to right, transparent 0%, #000 24%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to top, transparent 0%, rgba(0, 0, 0, 0.35) 6%, #000 20%),
+    linear-gradient(to right, transparent 0%, #000 24%);
+  mask-composite: intersect;
 }
 
 .contact-panel .section-label {
@@ -2698,6 +2774,10 @@ html.js .reveal.is-visible {
     gap: 24px;
   }
 
+  .contact-panel {
+    grid-template-columns: minmax(0, 1fr) minmax(255px, 0.58fr);
+  }
+
   .section-label {
     font-size: 10px;
     letter-spacing: 0.1em;
@@ -2714,6 +2794,14 @@ html.js .reveal.is-visible {
 }
 
 @media (max-width: 900px) {
+  .contact-panel {
+    display: block;
+  }
+
+  .contact-portrait {
+    display: none;
+  }
+
   .desktop-nav,
   .header-actions > .btn {
     display: none;
