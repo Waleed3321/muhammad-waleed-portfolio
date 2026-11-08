@@ -30,10 +30,6 @@
         to { transform: rotate(360deg); }
       }
 
-      @keyframes vis-ticks-turn {
-        to { transform: rotate(-360deg); }
-      }
-
       @keyframes vis-mesh-breathe {
         0%, 100% { transform: scale(1); }
         50% { transform: scale(1.016); }
@@ -44,21 +40,11 @@
         50% { opacity: 1; transform: scale(1.32); }
       }
 
-      @keyframes vis-bar-pulse {
-        0%, 100% { opacity: 0.4; }
-        50% { opacity: 1; }
-      }
-
       @keyframes vis-beam-sweep {
         0% { transform: translateY(198px); opacity: 0; }
         5% { opacity: 1; }
         30% { transform: translateY(594px); opacity: 1; }
         35%, 100% { transform: translateY(594px); opacity: 0; }
-      }
-
-      @keyframes vis-ripple {
-        0% { transform: scale(1); opacity: 0.8; }
-        70%, 100% { transform: scale(5); opacity: 0; }
       }
 
       .mesh {
@@ -73,56 +59,26 @@
         animation: vis-orbit-turn 24s linear infinite;
       }
 
-      .tick-ring {
-        transform-box: view-box;
-        transform-origin: 400px 400px;
-        animation: vis-ticks-turn 110s linear infinite;
-      }
-
-      .nodes circle {
+      .nodes--blue circle {
         transform-box: fill-box;
         transform-origin: center;
-        animation: vis-node-pulse 4.2s ease-in-out infinite;
-      }
-
-      .nodes--magenta circle:nth-child(2n) {
-        animation-delay: -1.3s;
-        animation-duration: 4.8s;
-      }
-
-      .nodes--magenta circle:nth-child(3n) {
-        animation-delay: -2.6s;
-        animation-duration: 3.7s;
-      }
-
-      .nodes--blue circle {
-        animation-duration: 5.2s;
+        animation: vis-node-pulse 5.2s ease-in-out infinite;
       }
 
       .nodes--blue circle:nth-child(2n) {
         animation-delay: -1.9s;
       }
 
-      .scan-bar {
-        animation: vis-bar-pulse 4.6s ease-in-out infinite;
-      }
-
       .scan-beam {
         animation: vis-beam-sweep 7.5s cubic-bezier(0.45, 0, 0.15, 1) infinite;
       }
 
-      .ripple {
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: vis-ripple 3.8s ease-out infinite;
-      }
-
       @media (prefers-reduced-motion: reduce) {
-        .mesh, .orbit-arc, .tick-ring, .nodes circle, .scan-bar, .scan-beam, .ripple {
+        .mesh, .orbit-arc, .nodes--blue circle, .scan-beam {
           animation: none;
         }
 
-        .scan-beam, .ripple {
+        .scan-beam {
           opacity: 0;
         }
       }
@@ -189,8 +145,6 @@
     <circle cx="470" cy="352" r="8" fill-opacity="0.16"/>
     <circle cx="400" cy="486" r="7" fill-opacity="0.14"/>
   </g>
-
-  <circle class="ripple" cx="400" cy="424" r="6" fill="none" stroke="#ff2e9a" stroke-width="1.2"/>
 
   <rect class="scan-bar" x="200" y="304" width="2" height="192" fill="url(#scan)" opacity="0.8"/>
 

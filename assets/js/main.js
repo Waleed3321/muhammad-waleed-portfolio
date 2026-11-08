@@ -109,6 +109,74 @@
   }
 
   /* ------------------------------------------------------------------
+     Stat counters
+     ------------------------------------------------------------------ */
+  const counters = Array.from(document.querySelectorAll("[data-count]"));
+
+  const counterText = (el) =>
+    Array.from(el.childNodes).find((child) => child.nodeType === 3 && child.textContent.trim());
+
+  const settleCounter = (el) => {
+    const node = counterText(el);
+    if (!node) return;
+    const target = Number(el.dataset.count);
+    const decimals = Number(el.dataset.countDecimals || 0);
+    if (Number.isFinite(target)) node.textContent = target.toFixed(decimals);
+  };
+
+  const runCounter = (el) => {
+    if (el.dataset.counted) return;
+    el.dataset.counted = "true";
+
+    const node = counterText(el);
+    const target = Number(el.dataset.count);
+    if (!node || !Number.isFinite(target)) return;
+    if (reduceMotion.matches) {
+      settleCounter(el);
+      return;
+    }
+
+    const decimals = Number(el.dataset.countDecimals || 0);
+    const duration = 1100;
+    const start = performance.now();
+
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      node.textContent = (target * eased).toFixed(decimals);
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    node.textContent = (0).toFixed(decimals);
+    requestAnimationFrame(tick);
+  };
+
+  if (counters.length) {
+    if (!reduceMotion.matches && "IntersectionObserver" in window) {
+      counters.forEach((el) => {
+        const node = counterText(el);
+        if (!node) return;
+        node.textContent = (0).toFixed(Number(el.dataset.countDecimals || 0));
+      });
+
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            runCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.6 }
+      );
+
+      counters.forEach((el) => counterObserver.observe(el));
+    } else {
+      counters.forEach(settleCounter);
+    }
+  }
+
+  /* ------------------------------------------------------------------
      Active navigation link
      ------------------------------------------------------------------ */
   const navLinks = Array.from(document.querySelectorAll("[data-nav]"));
@@ -585,6 +653,7 @@
     syncCursor();
     resetCube();
     if (!reduceMotion.matches) return;
+    counters.forEach(settleCounter);
     tiltTargets.forEach((target) => {
       target.classList.remove("is-tilting");
       target.style.removeProperty("--rx");

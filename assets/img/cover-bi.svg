@@ -18,7 +18,7 @@
       }
 
       @keyframes bi-arc {
-        to { stroke-dashoffset: -402; }
+        to { transform: rotate(360deg); }
       }
 
       @keyframes bi-trace {
@@ -44,7 +44,9 @@
       .bi-bars rect:nth-child(3n) { animation-delay: -2.4s; animation-duration: 4.4s; }
 
       .bi-arc {
-        animation: bi-arc 16s linear infinite;
+        transform-box: view-box;
+        transform-origin: 620px 300px;
+        animation: bi-arc 24s linear infinite;
       }
 
       .bi-trace {
@@ -116,7 +118,9 @@
 
   <g>
     <circle cx="620" cy="300" r="64" stroke="#ffffff" stroke-opacity="0.08" stroke-width="14"/>
-    <circle class="bi-arc" cx="620" cy="300" r="64" stroke="#ff2e9a" stroke-opacity="0.7" stroke-width="14" stroke-dasharray="240 402" stroke-linecap="round" transform="rotate(-90 620 300)"/>
+    <g class="bi-arc">
+      <circle cx="620" cy="300" r="64" stroke="#ff2e9a" stroke-opacity="0.7" stroke-width="14" stroke-dasharray="240 402" stroke-linecap="round" transform="rotate(-90 620 300)"/>
+    </g>
     <text x="620" y="306" fill="#f4f6f8" font-family="ui-monospace, Consolas, monospace" font-size="16" text-anchor="middle" letter-spacing="2">KPI</text>
   </g>
 
