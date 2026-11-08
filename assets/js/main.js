@@ -324,6 +324,8 @@
   if (cubeCardEl && cubeTilt && cube && cubeStage && "PointerEvent" in window) {
     const REST_X = -16;
     const REST_Y = -34;
+    const SPIN_X = -10;
+    const SPIN_PERIOD = 26;
     const TILT_LIMIT = 80;
     const DRAG_RATE = 0.55;
     const FRICTION = 0.93;
@@ -341,6 +343,7 @@
     let velocityX = 0;
     let velocityY = 0;
     let dragFrame = 0;
+    let handoffFrame = 0;
     let dragging = false;
     let manual = false;
     let activePointer = null;
@@ -399,16 +402,48 @@
       velocityY *= FRICTION;
       paintCube();
 
-      if (Math.abs(velocityX) > 0.04 || Math.abs(velocityY) > 0.04) {
+      if (Math.abs(velocityX) > 0.12 || Math.abs(velocityY) > 0.12) {
         dragFrame = requestAnimationFrame(glide);
       } else {
         velocityX = 0;
         velocityY = 0;
+        resumeSpin();
       }
+    };
+
+    const resumeSpin = () => {
+      if (!manual || dragging || handoffFrame || reduceMotion.matches) return;
+      const fromX = rotX;
+      const startTime = performance.now();
+      const duration = 420;
+
+      const settle = (progress) => 1 - Math.pow(1 - progress, 3);
+
+      const handoff = () => {
+        const progress = Math.min(1, (performance.now() - startTime) / duration);
+        rotX = fromX + (SPIN_X - fromX) * settle(progress);
+        paintCube();
+
+        if (progress < 1) {
+          handoffFrame = requestAnimationFrame(handoff);
+          return;
+        }
+
+        handoffFrame = 0;
+        const phase = ((rotY % 360) + 360) % 360;
+        manual = false;
+        cube.style.animationDelay = `-${((phase / 360) * SPIN_PERIOD).toFixed(3)}s`;
+        cube.classList.remove("is-manual");
+        cube.style.removeProperty("transform");
+      };
+
+      handoffFrame = requestAnimationFrame(handoff);
     };
 
     cube.addEventListener("pointerdown", (event) => {
       if (event.pointerType === "mouse" && event.button !== 0) return;
+      if (handoffFrame) cancelAnimationFrame(handoffFrame);
+      handoffFrame = 0;
       if (!manual) {
         const spin = readSpin();
         if (spin) {
@@ -457,6 +492,7 @@
       cubeCardEl.classList.remove("is-dragging");
       if (reduceMotion.matches || performance.now() - lastMoveTime > 120) {
         if (reduceMotion.matches) cubeCardEl.classList.remove("is-cube-live");
+        resumeSpin();
         return;
       }
       if (!dragFrame) dragFrame = requestAnimationFrame(glide);
@@ -481,13 +517,16 @@
     });
 
     const releaseCube = () => {
-      if (dragging || !cubeEngaged) return;
-      cubeEngaged = false;
-      cubeBounds = null;
-      aimX = 0;
-      aimY = 0;
-      cubeCardEl.classList.remove("is-cube-live");
-      kickTilt();
+      if (dragging) return;
+      if (cubeEngaged) {
+        cubeEngaged = false;
+        cubeBounds = null;
+        aimX = 0;
+        aimY = 0;
+        cubeCardEl.classList.remove("is-cube-live");
+        kickTilt();
+      }
+      resumeSpin();
     };
 
     cubeCardEl.addEventListener("pointerleave", releaseCube);
@@ -507,8 +546,10 @@
     resetCube = () => {
       if (cubeFrame) cancelAnimationFrame(cubeFrame);
       if (dragFrame) cancelAnimationFrame(dragFrame);
+      if (handoffFrame) cancelAnimationFrame(handoffFrame);
       cubeFrame = 0;
       dragFrame = 0;
+      handoffFrame = 0;
       cubeEngaged = false;
       dragging = false;
       manual = false;
@@ -520,6 +561,7 @@
       rotY = REST_Y;
       cube.classList.remove("is-manual");
       cube.style.removeProperty("transform");
+      cube.style.removeProperty("animation-delay");
       cubeTilt.style.removeProperty("transform");
       cubeCardEl.classList.remove("is-cube-live", "is-dragging");
       cubeStage.classList.remove("is-shock");
