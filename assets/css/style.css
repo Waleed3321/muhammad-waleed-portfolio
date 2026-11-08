@@ -970,6 +970,12 @@ body.menu-open {
   height: var(--cube);
   transform-style: preserve-3d;
   animation: core-spin 26s linear infinite;
+  touch-action: none;
+  will-change: transform;
+}
+
+.core-cube.is-manual {
+  animation: none;
 }
 
 .core-card.is-cube-live .core-face {

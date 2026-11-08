@@ -313,14 +313,21 @@
   }
 
   /* ------------------------------------------------------------------
-     Pointer-reactive core cube
+     Core cube: hover parallax plus grab-to-rotate
      ------------------------------------------------------------------ */
   const cubeCardEl = document.querySelector(".core-card");
   const cubeTilt = document.querySelector("[data-cube-tilt]");
+  const cube = document.querySelector(".core-cube");
   const cubeStage = document.querySelector(".core-stage");
   let resetCube = () => {};
 
-  if (cubeCardEl && cubeTilt && cubeStage && "PointerEvent" in window) {
+  if (cubeCardEl && cubeTilt && cube && cubeStage && "PointerEvent" in window) {
+    const REST_X = -16;
+    const REST_Y = -34;
+    const TILT_LIMIT = 80;
+    const DRAG_RATE = 0.55;
+    const FRICTION = 0.93;
+
     let cubeFrame = 0;
     let cubeBounds = null;
     let cubeEngaged = false;
@@ -329,7 +336,22 @@
     let tiltX = 0;
     let tiltY = 0;
 
-    const renderCube = () => {
+    let rotX = REST_X;
+    let rotY = REST_Y;
+    let velocityX = 0;
+    let velocityY = 0;
+    let dragFrame = 0;
+    let dragging = false;
+    let manual = false;
+    let activePointer = null;
+    let lastX = 0;
+    let lastY = 0;
+    let lastMoveTime = 0;
+
+    const clamp = (value) => Math.max(-TILT_LIMIT, Math.min(TILT_LIMIT, value));
+    const clampVelocity = (value) => Math.max(-30, Math.min(30, value));
+
+    const renderTilt = () => {
       cubeFrame = 0;
       tiltX += (aimX - tiltX) * 0.16;
       tiltY += (aimY - tiltY) * 0.16;
@@ -343,16 +365,105 @@
       cubeTilt.style.transform = `rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
 
       if (!settled) {
-        cubeFrame = requestAnimationFrame(renderCube);
+        cubeFrame = requestAnimationFrame(renderTilt);
       } else if (!cubeEngaged) {
         cubeTilt.style.removeProperty("transform");
         cubeCardEl.classList.remove("is-cube-live");
       }
     };
 
-    const kickCube = () => {
-      if (!cubeFrame) cubeFrame = requestAnimationFrame(renderCube);
+    const kickTilt = () => {
+      if (!cubeFrame) cubeFrame = requestAnimationFrame(renderTilt);
     };
+
+    const paintCube = () => {
+      cube.style.transform = `rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+    };
+
+    const readSpin = () => {
+      const matrix = getComputedStyle(cube).transform.match(/matrix3d\((.+)\)/);
+      if (!matrix) return null;
+      const values = matrix[1].split(",").map(Number);
+      const toDeg = 180 / Math.PI;
+      return {
+        x: Math.atan2(values[6], values[5]) * toDeg,
+        y: Math.atan2(values[8], values[0]) * toDeg,
+      };
+    };
+
+    const glide = () => {
+      dragFrame = 0;
+      rotY += velocityX;
+      rotX = clamp(rotX + velocityY);
+      velocityX *= FRICTION;
+      velocityY *= FRICTION;
+      paintCube();
+
+      if (Math.abs(velocityX) > 0.04 || Math.abs(velocityY) > 0.04) {
+        dragFrame = requestAnimationFrame(glide);
+      } else {
+        velocityX = 0;
+        velocityY = 0;
+      }
+    };
+
+    cube.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      if (!manual) {
+        const spin = readSpin();
+        if (spin) {
+          rotX = clamp(spin.x);
+          rotY = spin.y;
+        }
+        manual = true;
+        cube.classList.add("is-manual");
+        paintCube();
+      }
+      dragging = true;
+      activePointer = event.pointerId;
+      velocityX = 0;
+      velocityY = 0;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      lastMoveTime = performance.now();
+      if (dragFrame) cancelAnimationFrame(dragFrame);
+      dragFrame = 0;
+      cube.setPointerCapture(event.pointerId);
+      cubeCardEl.classList.add("is-cube-live", "is-dragging");
+      aimX = 0;
+      aimY = 0;
+      kickTilt();
+      event.preventDefault();
+    });
+
+    cube.addEventListener("pointermove", (event) => {
+      if (!dragging || event.pointerId !== activePointer) return;
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      lastMoveTime = performance.now();
+      rotY += dx * DRAG_RATE;
+      rotX = clamp(rotX + dy * DRAG_RATE);
+      velocityX = clampVelocity(dx * DRAG_RATE);
+      velocityY = clampVelocity(dy * DRAG_RATE);
+      paintCube();
+    });
+
+    const endDrag = (event) => {
+      if (!dragging || event.pointerId !== activePointer) return;
+      dragging = false;
+      activePointer = null;
+      cubeCardEl.classList.remove("is-dragging");
+      if (reduceMotion.matches || performance.now() - lastMoveTime > 120) {
+        if (reduceMotion.matches) cubeCardEl.classList.remove("is-cube-live");
+        return;
+      }
+      if (!dragFrame) dragFrame = requestAnimationFrame(glide);
+    };
+
+    cube.addEventListener("pointerup", endDrag);
+    cube.addEventListener("pointercancel", endDrag);
 
     cubeCardEl.addEventListener("pointerenter", () => {
       if (!finePointer.matches || reduceMotion.matches) return;
@@ -362,21 +473,21 @@
     });
 
     cubeCardEl.addEventListener("pointermove", (event) => {
-      if (!finePointer.matches || reduceMotion.matches) return;
+      if (dragging || !finePointer.matches || reduceMotion.matches) return;
       if (!cubeBounds) cubeBounds = cubeCardEl.getBoundingClientRect();
       aimY = ((event.clientX - cubeBounds.left) / cubeBounds.width - 0.5) * 44;
       aimX = ((event.clientY - cubeBounds.top) / cubeBounds.height - 0.5) * -28;
-      kickCube();
+      kickTilt();
     });
 
     const releaseCube = () => {
-      if (!cubeEngaged) return;
+      if (dragging || !cubeEngaged) return;
       cubeEngaged = false;
       cubeBounds = null;
       aimX = 0;
       aimY = 0;
       cubeCardEl.classList.remove("is-cube-live");
-      kickCube();
+      kickTilt();
     };
 
     cubeCardEl.addEventListener("pointerleave", releaseCube);
@@ -395,12 +506,22 @@
 
     resetCube = () => {
       if (cubeFrame) cancelAnimationFrame(cubeFrame);
+      if (dragFrame) cancelAnimationFrame(dragFrame);
       cubeFrame = 0;
+      dragFrame = 0;
       cubeEngaged = false;
+      dragging = false;
+      manual = false;
+      activePointer = null;
       cubeBounds = null;
       aimX = aimY = tiltX = tiltY = 0;
+      velocityX = velocityY = 0;
+      rotX = REST_X;
+      rotY = REST_Y;
+      cube.classList.remove("is-manual");
+      cube.style.removeProperty("transform");
       cubeTilt.style.removeProperty("transform");
-      cubeCardEl.classList.remove("is-cube-live");
+      cubeCardEl.classList.remove("is-cube-live", "is-dragging");
       cubeStage.classList.remove("is-shock");
     };
 
