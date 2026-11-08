@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" width="800" height="520" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1119"/>
+      <stop offset="1" stop-color="#0a0e14"/>
+    </linearGradient>
+    <linearGradient id="sheet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111823"/>
+      <stop offset="1" stop-color="#0c121a"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.045"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="520" fill="url(#bg)"/>
+  <rect width="800" height="520" fill="url(#grid)"/>
+
+  <!-- spreadsheet window -->
+  <g>
+    <rect x="96" y="96" width="608" height="352" rx="14" fill="url(#sheet)" stroke="#ffffff" stroke-opacity="0.1"/>
+    <path d="M96 142h608" stroke="#ffffff" stroke-opacity="0.1"/>
+    <circle cx="122" cy="119" r="4" fill="#3d8bff" fill-opacity="0.55"/>
+    <circle cx="138" cy="119" r="4" fill="#ff2e9a" fill-opacity="0.4"/>
+    <circle cx="154" cy="119" r="4" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="182" y="124" font-family="ui-monospace, Consolas, monospace" font-size="11" letter-spacing="2" fill="#788392">dashboard.xlsm</text>
+    <text x="640" y="124" font-family="ui-monospace, Consolas, monospace" font-size="11" letter-spacing="2" fill="#ff2e9a">VBA</text>
+  </g>
+
+  <!-- column / row grid lines -->
+  <g stroke="#ffffff" stroke-opacity="0.055">
+    <path d="M200 142V448M264 142V448M328 142V448M392 142V448M456 142V448M520 142V448"/>
+    <path d="M640 142V448"/>
+    <path d="M96 196H704M96 250H704M96 304H704M96 358H704M96 412H704"/>
+  </g>
+
+  <!-- checkbox column -->
+  <g>
+    <g stroke="#3d8bff" stroke-width="1.5" fill="#3d8bff" fill-opacity="0.16">
+      <rect x="114" y="160" width="16" height="16" rx="4"/>
+      <rect x="114" y="214" width="16" height="16" rx="4"/>
+      <rect x="114" y="268" width="16" height="16" rx="4"/>
+    </g>
+    <rect x="114" y="322" width="16" height="16" rx="4" stroke="#ffffff" stroke-opacity="0.3" fill="none"/>
+
+    <g stroke="#3d8bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m117 168 3 3 6-6"/>
+      <path d="m117 222 3 3 6-6"/>
+      <path d="m117 276 3 3 6-6"/>
+    </g>
+
+    <g font-family="ui-monospace, Consolas, monospace" font-size="11" letter-spacing="1.4" fill="#a7b0bd">
+      <text x="142" y="172">01</text>
+      <text x="142" y="226">02</text>
+      <text x="142" y="280">03</text>
+      <text x="142" y="334" fill="#788392">04</text>
+    </g>
+  </g>
+
+  <!-- pivot table blocks -->
+  <g>
+    <rect x="212" y="156" width="404" height="34" rx="6" fill="#ff2e9a" fill-opacity="0.08" stroke="#ff2e9a" stroke-opacity="0.2"/>
+    <rect x="212" y="210" width="404" height="34" rx="6" fill="#ff2e9a" fill-opacity="0.08" stroke="#ff2e9a" stroke-opacity="0.2"/>
+    <rect x="212" y="264" width="404" height="34" rx="6" fill="#ff2e9a" fill-opacity="0.08" stroke="#ff2e9a" stroke-opacity="0.2"/>
+    <rect x="212" y="318" width="404" height="34" rx="6" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-dasharray="4 5"/>
+
+    <g fill="#ff2e9a" fill-opacity="0.55">
+      <rect x="228" y="170" width="66" height="7" rx="3.5"/>
+      <rect x="228" y="224" width="94" height="7" rx="3.5"/>
+      <rect x="228" y="278" width="78" height="7" rx="3.5"/>
+    </g>
+    <g fill="#ffffff" fill-opacity="0.14">
+      <rect x="310" y="170" width="120" height="7" rx="3.5"/>
+      <rect x="310" y="224" width="150" height="7" rx="3.5"/>
+      <rect x="310" y="278" width="104" height="7" rx="3.5"/>
+      <rect x="228" y="332" width="70" height="7" rx="3.5"/>
+      <rect x="310" y="332" width="128" height="7" rx="3.5"/>
+    </g>
+    <g fill="#3d8bff" fill-opacity="0.6">
+      <rect x="512" y="170" width="74" height="7" rx="3.5"/>
+      <rect x="512" y="224" width="74" height="7" rx="3.5"/>
+      <rect x="512" y="278" width="74" height="7" rx="3.5"/>
+    </g>
+  </g>
+
+  <!-- slicer panel -->
+  <g>
+    <rect x="646" y="304" width="118" height="142" rx="10" fill="#0a0e14" stroke="#3d8bff" stroke-opacity="0.3"/>
+    <text x="662" y="330" font-family="ui-monospace, Consolas, monospace" font-size="10" letter-spacing="1.6" fill="#3d8bff">REGION</text>
+    <g font-family="ui-monospace, Consolas, monospace" font-size="10" fill="#a7b0bd">
+      <text x="662" y="356">North</text>
+      <text x="662" y="384">South</text>
+      <text x="662" y="412">East</text>
+    </g>
+    <g stroke="#ffffff" stroke-opacity="0.12">
+      <path d="M658 366h94M658 394h94M658 422h94"/>
+    </g>
+  </g>
+
+  <!-- connector lines to slicer -->
+  <g stroke="#3d8bff" stroke-opacity="0.32" stroke-width="1.3" stroke-dasharray="3 5">
+    <path d="M616 173H646V372"/>
+    <path d="M616 227H660V372"/>
+    <path d="M616 281H674V372"/>
+  </g>
+  <g fill="#3d8bff">
+    <circle cx="616" cy="173" r="3"/>
+    <circle cx="616" cy="227" r="3"/>
+    <circle cx="616" cy="281" r="3"/>
+  </g>
+
+  <g font-family="ui-monospace, Consolas, monospace" font-size="11" letter-spacing="2.2" fill="#788392">
+    <text x="42" y="48">AUTOMATION / EXCEL</text>
+    <text x="42" y="486">PIVOT TABLES · VBA</text>
+    <text x="612" y="486" fill="#3d8bff">4 MODULES</text>
+    <text x="646" y="48" fill="#ff2e9a">SLICER</text>
+  </g>
+</svg>

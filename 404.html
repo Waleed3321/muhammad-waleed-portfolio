@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found — Muhammad Waleed</title>
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#04060f">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .notfound {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 120px 24px 80px;
+      background:
+        radial-gradient(720px 480px at 50% -8%, rgba(61, 139, 255, 0.16), transparent 66%),
+        radial-gradient(520px 420px at 78% 100%, rgba(255, 46, 154, 0.1), transparent 66%),
+        var(--bg);
+      text-align: center;
+    }
+    .notfound::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(125, 220, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(125, 220, 255, 0.05) 1px, transparent 1px);
+      background-size: 64px 64px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000, transparent 76%);
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000, transparent 76%);
+      pointer-events: none;
+    }
+    .notfound__inner {
+      position: relative;
+      max-width: 640px;
+      padding: clamp(28px, 5vw, 48px);
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: linear-gradient(158deg, rgba(23, 32, 47, 0.92), rgba(7, 10, 17, 0.97));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 8px 8px 0 rgba(0, 0, 0, 0.45),
+        0 0 80px rgba(61, 139, 255, 0.09);
+    }
+    .notfound__code {
+      font-family: var(--font-display);
+      font-size: clamp(88px, 21vw, 170px);
+      font-weight: 700;
+      line-height: 0.85;
+      letter-spacing: -0.07em;
+      margin: 0 0 22px;
+      color: var(--text);
+      text-shadow: 0 0 44px rgba(61, 139, 255, 0.22);
+    }
+    .notfound__code em {
+      font-style: normal;
+      color: var(--magenta);
+      text-shadow: 0 0 44px rgba(255, 46, 154, 0.45);
+    }
+    .notfound h1 {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 700;
+      margin: 0 0 14px;
+      letter-spacing: -0.035em;
+    }
+    .notfound p:not(.notfound__code) {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+      margin: 0 auto 34px;
+      max-width: 46ch;
+    }
+    .notfound__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="notfound">
+    <div class="notfound__inner">
+      <a class="brand" href="/" aria-label="Muhammad Waleed — home" style="justify-content:center;margin-bottom:36px">
+        <span class="brand-mark" aria-hidden="true">MW</span>
+        <span class="brand-name">Muhammad Waleed</span>
+      </a>
+      <p class="notfound__code">4<em>0</em>4</p>
+      <h1>This page drifted out of the graph.</h1>
+      <p>The URL doesn't exist — but the projects do. Head back to the portfolio or jump straight to the work.</p>
+      <div class="notfound__actions">
+        <a class="btn btn--primary" href="/">Back to home</a>
+        <a class="btn btn--ghost" href="/#work">See selected work</a>
+        <a class="btn btn--ghost" href="https://github.com/winx007" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </main>
+
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__ring" data-cursor-ring></div>
+    <div class="cursor__dot" data-cursor-dot></div>
+  </div>
+  <script src="/assets/js/main.js" defer></script>
+</body>
+</html>
