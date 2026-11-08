@@ -16,11 +16,123 @@
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
       <path d="M40 0H0V40" stroke="#ffffff" stroke-opacity="0.045"/>
     </pattern>
+    <linearGradient id="beamline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38e8ff" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#38e8ff" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#38e8ff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="beamtrail" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38e8ff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#38e8ff" stop-opacity="0.16"/>
+    </linearGradient>
+    <style>
+      @keyframes vis-orbit-turn {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes vis-ticks-turn {
+        to { transform: rotate(-360deg); }
+      }
+
+      @keyframes vis-mesh-breathe {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.016); }
+      }
+
+      @keyframes vis-node-pulse {
+        0%, 100% { opacity: 0.55; transform: scale(0.82); }
+        50% { opacity: 1; transform: scale(1.32); }
+      }
+
+      @keyframes vis-bar-pulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+
+      @keyframes vis-beam-sweep {
+        0% { transform: translateY(198px); opacity: 0; }
+        5% { opacity: 1; }
+        30% { transform: translateY(594px); opacity: 1; }
+        35%, 100% { transform: translateY(594px); opacity: 0; }
+      }
+
+      @keyframes vis-ripple {
+        0% { transform: scale(1); opacity: 0.8; }
+        70%, 100% { transform: scale(5); opacity: 0; }
+      }
+
+      .mesh {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: vis-mesh-breathe 9s ease-in-out infinite;
+      }
+
+      .orbit-arc {
+        transform-box: view-box;
+        transform-origin: 400px 400px;
+        animation: vis-orbit-turn 24s linear infinite;
+      }
+
+      .tick-ring {
+        transform-box: view-box;
+        transform-origin: 400px 400px;
+        animation: vis-ticks-turn 110s linear infinite;
+      }
+
+      .nodes circle {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: vis-node-pulse 4.2s ease-in-out infinite;
+      }
+
+      .nodes--magenta circle:nth-child(2n) {
+        animation-delay: -1.3s;
+        animation-duration: 4.8s;
+      }
+
+      .nodes--magenta circle:nth-child(3n) {
+        animation-delay: -2.6s;
+        animation-duration: 3.7s;
+      }
+
+      .nodes--blue circle {
+        animation-duration: 5.2s;
+      }
+
+      .nodes--blue circle:nth-child(2n) {
+        animation-delay: -1.9s;
+      }
+
+      .scan-bar {
+        animation: vis-bar-pulse 4.6s ease-in-out infinite;
+      }
+
+      .scan-beam {
+        animation: vis-beam-sweep 7.5s cubic-bezier(0.45, 0, 0.15, 1) infinite;
+      }
+
+      .ripple {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: vis-ripple 3.8s ease-out infinite;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .mesh, .orbit-arc, .tick-ring, .nodes circle, .scan-bar, .scan-beam, .ripple {
+          animation: none;
+        }
+
+        .scan-beam, .ripple {
+          opacity: 0;
+        }
+      }
+    </style>
   </defs>
 
   <rect width="800" height="800" fill="url(#bg)"/>
   <rect width="800" height="800" fill="url(#grid)"/>
   <circle cx="400" cy="400" r="300" fill="url(#glow)"/>
+  <circle class="orbit-arc" cx="400" cy="400" r="214" stroke="#38e8ff" stroke-opacity="0.3" stroke-width="1.3" stroke-dasharray="92 1253" stroke-linecap="round"/>
 
   <!-- HUD corner brackets -->
   <g stroke="#ff2e9a" stroke-opacity="0.35" stroke-width="1.4">
@@ -31,7 +143,7 @@
   </g>
 
   <!-- face mesh -->
-  <g stroke="#3d8bff" stroke-opacity="0.5">
+  <g class="mesh" stroke="#3d8bff" stroke-opacity="0.5">
     <ellipse cx="400" cy="400" rx="150" ry="196"/>
     <ellipse cx="400" cy="400" rx="116" ry="162" stroke-opacity="0.22"/>
   </g>
@@ -45,13 +157,19 @@
     <path d="M330 470 Q400 424 470 470"/>
   </g>
 
+  <g class="scan-beam" opacity="0">
+    <rect x="250" y="-26" width="300" height="26" fill="url(#beamtrail)"/>
+    <rect x="250" y="-4" width="300" height="8" rx="4" fill="url(#beamline)" opacity="0.22"/>
+    <rect x="252" y="-1" width="296" height="2" rx="1" fill="url(#beamline)"/>
+  </g>
+
   <!-- tick ring -->
-  <g stroke="#ff2e9a" stroke-opacity="0.3">
+  <g class="tick-ring" stroke="#ff2e9a" stroke-opacity="0.3">
     <path d="M400 180v12M400 608v12M228 400h12M560 400h12"/>
     <path d="M297 218l8 9M503 218l-8 9M297 582l8-9M503 582l-8-9"/>
   </g>
 
-  <g fill="#ff2e9a">
+  <g class="nodes nodes--magenta" fill="#ff2e9a">
     <circle cx="330" cy="352" r="3.4"/>
     <circle cx="470" cy="352" r="3.4"/>
     <circle cx="400" cy="424" r="3.4"/>
@@ -64,7 +182,7 @@
     <circle cx="518" cy="500" r="2.8"/>
   </g>
 
-  <g fill="#3d8bff">
+  <g class="nodes nodes--blue" fill="#3d8bff">
     <circle cx="400" cy="204" r="3.6"/>
     <circle cx="400" cy="596" r="3.6"/>
     <circle cx="330" cy="352" r="8" fill-opacity="0.16"/>
@@ -72,7 +190,9 @@
     <circle cx="400" cy="486" r="7" fill-opacity="0.14"/>
   </g>
 
-  <rect x="200" y="304" width="2" height="192" fill="url(#scan)" opacity="0.8"/>
+  <circle class="ripple" cx="400" cy="424" r="6" fill="none" stroke="#ff2e9a" stroke-width="1.2"/>
+
+  <rect class="scan-bar" x="200" y="304" width="2" height="192" fill="url(#scan)" opacity="0.8"/>
 
   <!-- age-scale arc -->
   <g stroke="#ffffff" stroke-opacity="0.13">
