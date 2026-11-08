@@ -16,7 +16,7 @@ Live URL (assumed): `https://muhammad-waleed-winx.onrender.com/`
 │   ├── js/main.js              # Nav, scrollspy, reveal, pointer tilt, cursor reticle, copy-email
 │   ├── img/                    # SVG project covers, favicon, app icons, OG image
 │   └── Muhammad_Waleed_Resume.pdf
-├── site.webmanifest
+├── manifest.json
 ├── robots.txt
 ├── sitemap.xml
 ├── render.yaml                 # Render Blueprint (static site + headers)
@@ -54,7 +54,7 @@ matches how Render serves the site (absolute paths, 404 page, manifest).
 
 - If Render assigns a different URL than `https://muhammad-waleed-winx.onrender.com/`,
   update it in: `index.html` (canonical, Open Graph, Twitter, JSON-LD `@id`/`url`),
-  `robots.txt`, `sitemap.xml`, `site.webmanifest` (only if you use absolute icon paths).
+  `robots.txt`, `sitemap.xml`, `manifest.json` (only if you use absolute icon paths).
 - Submit `https://<your-url>/sitemap.xml` in Google Search Console.
 - Verify the Open Graph card with the LinkedIn Post Inspector, then re-share the link
   (LinkedIn caches the old preview).
